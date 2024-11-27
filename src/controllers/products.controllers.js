@@ -8,20 +8,6 @@ export const getProducts =  async (req,res)=>{
     res.json(result.recordset)
 }
 
-export const getProduct = async (req, res)=>{
-    console.log(req.params.id);
-    const pool = await getConnection();
-    const result = await pool
-    .request()
-    .input("id", sql.Int, req.params.id)
-    .query("SELECT * FROM products WHERE id = @id");
-
-    if(result.rowsAffected[0] ===0){
-        return res.status(404).json({message: "producto no encontrado"})
-    }
-
-    return res.json(result.recordset)
-}
 
 export const createProduct = async (req,res)=>{
 
@@ -49,7 +35,33 @@ export const updateProduct = async (req,res)=>{
     res.send('editando producto')
 }
 
-export const deleteProduct = (req,res)=>{
-    res.send('Eliminando un producto')
+export const getProduct = async (req, res)=>{
+    console.log(req.params.id);
+    const pool = await getConnection();
+    const result = await pool
+    .request()
+    .input("id", sql.Int, req.params.id)
+    .query("SELECT * FROM products WHERE id = @id");
+
+    if(result.rowsAffected[0] === 0){
+        return res.status(404).json({message: "producto no encontrado"})
+    }
+
+    return res.json(result.recordset)
+}
+
+export const deleteProduct = async (req,res)=>{
+    const pool = await getConnection();
+    const result = await pool
+    .request()
+    .input("id", sql.Int, req.params.id)
+    .query("DELETE FROM products WHERE id = @id")
+
+    if(result.rowsAffected[0] === 0){
+        return res.status(404).json({message: "producto no encontrado"})
+    }
+
+    res.send('Eliminando un producto');
+    return res.json(result.recordset)
 }
 

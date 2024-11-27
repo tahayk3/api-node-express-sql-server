@@ -9,8 +9,8 @@ router.get('/productos/:id', getProduct);
 
 router.post('/productos', createProduct);
 
-router.put('/producto/:id', updateProduct);
+router.put('/productos/:id', updateProduct);
 
-router.delete('/producto', deleteProduct);
+router.delete('/productos/:id', deleteProduct);
 
 export default router;
