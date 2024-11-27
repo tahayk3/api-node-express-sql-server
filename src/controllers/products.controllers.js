@@ -8,8 +8,19 @@ export const getProducts =  async (req,res)=>{
     res.json(result.recordset)
 }
 
-export const getProduct = (req, res)=>{
-    res.send('obteniendo datos de un producto')
+export const getProduct = async (req, res)=>{
+    console.log(req.params.id);
+    const pool = await getConnection();
+    const result = await pool
+    .request()
+    .input("id", sql.Int, req.params.id)
+    .query("SELECT * FROM products WHERE id = @id");
+
+    if(result.rowsAffected[0] ===0){
+        return res.status(404).json({message: "producto no encontrado"})
+    }
+
+    return res.json(result.recordset)
 }
 
 export const createProduct = async (req,res)=>{
@@ -34,7 +45,7 @@ export const createProduct = async (req,res)=>{
     })
 }
 
-export const updateProduct = (req,res)=>{
+export const updateProduct = async (req,res)=>{
     res.send('editando producto')
 }
 
