@@ -32,7 +32,21 @@ export const createProduct = async (req,res)=>{
 }
 
 export const updateProduct = async (req,res)=>{
-    res.send('editando producto')
+    const pool = await getConnection();
+    const result = await pool
+    .request()
+    .input("id", sql.Int, req.params.id)
+    .input("name", sql.VarChar, req.body.name)
+    .input("description", sql.Text, req.body.description)
+    .input("quantity", sql.Int, req.body.quantity)
+    .input("price", sql.Decimal, req.body.price)
+    .query(
+        "UPDATE products SET name = @name, description = @description, quantity = @quantity, price = @price  WHERE id = @id");
+    
+    if(result.rowsAffected[0] === 0){
+        return res.status(404).json({message: "Producto no encontrado"})
+    }
+    res.json("Producto actualizado")
 }
 
 export const getProduct = async (req, res)=>{
